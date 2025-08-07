@@ -1,4 +1,4 @@
-name: IPQ60XX-6.12-WIFI
+name: IPQ60XX2-6.12-WIFI
 
 on:
   workflow_dispatch:
