@@ -30,6 +30,9 @@ function git_sparse_clone() {
 # 添加额外插件
 git clone --depth=1 https://github.com/kongfl888/luci-app-adguardhome package/luci-app-adguardhome
 git clone --depth=1 https://github.com/Jason6111/luci-app-netdata package/luci-app-netdata
+git clone --depth 1 https://github.com/gdy666/lucky.git package/lucky
+git clone --depth 1 https://github.com/gdy666/luci-app-lucky.git package/luci-app-lucky
+git clone --depth 1 https://github.com/gdy666/luci-i18n-lucky-zh-cn.git package/luci-i18n-lucky-zh-cn
 # git_sparse_clone master https://github.com/syb999/openwrt-19.07.1 package/network/services/msd_lite
 
 # 科学上网插件
