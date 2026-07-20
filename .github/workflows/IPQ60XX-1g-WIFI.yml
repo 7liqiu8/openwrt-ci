@@ -110,6 +110,18 @@ jobs:
         cd $OPENWRT_PATH
         ./scripts/feeds update -a
         ./scripts/feeds install -a
+    
+        echo "=== Check: kmod-nf-conntrack location ==="
+        grep -rn "define KernelPackage/nf-conntrack" package/ || echo "Not found!"
+    
+        echo "=== Check: kmod-nf-conntrack6 (should be missing) ==="
+        grep -rn "define KernelPackage/nf-conntrack6" package/ || echo "Not found (as expected)"
+    
+        # 修复过时依赖
+        echo "=== Fixing jool and openvswitch ==="
+        sed -i 's/+kmod-nf-conntrack6/+kmod-nf-conntrack/g' package/feeds/packages/jool/Makefile
+        sed -i 's/+kmod-nf-conntrack6/+kmod-nf-conntrack/g' package/feeds/packages/openvswitch/Makefile
+        echo "Done."
   
     - name: Load Custom Configuration(加载自定义配置)
       run: |
