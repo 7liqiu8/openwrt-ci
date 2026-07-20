@@ -17,7 +17,7 @@ sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/network/mwan3
 # 4. 克隆并安装配套 LuCI 界面
 rm -rf feeds/luci/applications/luci-app-mwan3
 git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git feeds/luci/applications/luci-app-mwan3 || exit 1
-./scripts/feeds install luci-app-mwan3 || exit 1
+./scripts/feeds install -f luci-app-mwan3 || exit 1
 
 # 5. 确保 mwan3 核心依赖已安装（防止缺失）
 ./scripts/feeds install libnetfilter-conntrack || exit 1
