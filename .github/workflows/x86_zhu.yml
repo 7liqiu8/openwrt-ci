@@ -8,13 +8,13 @@ on:
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt.git
   REPO_BRANCH: openwrt-24.10
-  CONFIG_FILE: configs/ipq60xx-1g-wifi.config
+  CONFIG_FILE: configs/x86_zhu.config
   DIY_SH: diy_ipq60xx.sh
   CLASH_KERNEL: amd64
   CACHE_TOOLCHAIN: true
   UPLOAD_BIN_DIR: false
   FIRMWARE_RELEASE: true
-  FIRMWARE_TAG: IPQ60XX-1g-WIFI
+  FIRMWARE_TAG: x86_zhu
   TZ: Asia/Shanghai
 
 jobs:
@@ -161,12 +161,12 @@ jobs:
         artifacts: ${{ env.FIRMWARE_PATH }}/*
         body: |
           **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }}**
-          ### 📒 固件信息1g-(WIFI)
-          - 带WIFI带有线NSS的内核固件
+          ### 📒 固件信息
+          - x86_主路由器
           - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 OpenWrt 固件
           - ⚽ 固件源码: ${{ env.REPO_URL }}
           - 💝 源码分支: ${{ env.REPO_BRANCH }}
-          - 🌐 默认地址: 10.10.21.1
+          - 🌐 默认地址: 10.10.10.1
           - 🔑 默认密码: password
           ### 🧊 固件版本
           - 固件编译前最后一次➦[主源码](${{ env.REPO_URL }})更新记录
