@@ -11,7 +11,7 @@ env:
   CONFIG_FILE: configs/ipq60xx-1g-wifi.config
   DIY_SH: diy_ipq60xx.sh
   CLASH_KERNEL: amd64
-  CACHE_TOOLCHAIN: true
+  CACHE_TOOLCHAIN: false
   UPLOAD_BIN_DIR: false
   FIRMWARE_RELEASE: true
   FIRMWARE_TAG: IPQ60XX-1g-WIFI
@@ -138,6 +138,11 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+
+    - name: Clean old build artifacts
+      run: |
+        cd $OPENWRT_PATH
+        rm -rf staging_dir build_dir
 
     - name: Compile Firmware(开始编译固件)
       id: compile
