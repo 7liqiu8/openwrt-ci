@@ -135,7 +135,7 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-    - name: Clean old build artifacts
+    - name: Clean old build artifacts(清理旧编译数据)
       run: |
         cd $OPENWRT_PATH
         rm -rf staging_dir build_dir
