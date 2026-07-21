@@ -35,7 +35,6 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky package/lucky
 # 添加 argon 主题
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
-cp -f $GITHUB_WORKSPACE/images/bg1.jpg package/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
 
 # 修改默认 IP（和可选的主机名）
 sed -i 's/192.168.1.1/10.10.21.1/g' package/base-files/files/bin/config_generate
