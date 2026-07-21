@@ -3,7 +3,7 @@ name: x86_test
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 16 * * *
+    - cron: 0 17 * * *
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt.git
