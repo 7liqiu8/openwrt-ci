@@ -30,6 +30,9 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky package/lucky
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
 
+#  添加pass wall2
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
+
 #  删除冲突的 firewall4 旧补丁
 rm -f package/network/utils/nftables/patches/001-drop-useless-file.patch
 rm -f package/network/utils/nftables/patches/002-nftables-add-fullcone-expression-support.patch
