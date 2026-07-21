@@ -105,20 +105,14 @@ jobs:
         mixkey: ${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}-${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}
         prefix: ${{ env.OPENWRT_PATH }}
     
-    - name: Install Feeds(安装feeds)
-      run: |
-        cd $OPENWRT_PATH
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
-  
-    - name: Load Custom Configuration(加载自定义配置)
+    - name: Load Custom Configuration(加载自定义配置和更新、安装feeds)
       run: |
         [ -e files ] && mv files $OPENWRT_PATH/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
         chmod +x $DIY_SH
         cd $OPENWRT_PATH
         $GITHUB_WORKSPACE/$DIY_SH
-
+  
     - name: Download DL Package(下载DL软件包)
       run: |
         cd $OPENWRT_PATH
