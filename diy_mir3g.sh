@@ -44,5 +44,5 @@ chmod +x add_sonic_fullcone.sh
 make package/network/config/firewall4/clean V=s
 
 #  修改 IP 和主机名
-sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/10.10.60.1/g' package/base-files/files/bin/config_generate
 sed -i "s/ImmortalWrt/OpenWrt/g" package/base-files/files/bin/config_generate
