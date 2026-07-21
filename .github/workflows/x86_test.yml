@@ -9,7 +9,7 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt.git
   REPO_BRANCH: openwrt-24.10
   CONFIG_FILE: configs/x86_test.config
-  DIY_SH: x86_test.sh
+  DIY_SH: diy_x86_test.sh
   CLASH_KERNEL: amd64
   CACHE_TOOLCHAIN: false
   UPLOAD_BIN_DIR: false
