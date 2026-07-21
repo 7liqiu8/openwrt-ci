@@ -31,7 +31,8 @@ git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon packa
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
 
 #  删除冲突的 firewall4 旧补丁
-rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
+rm -f package/network/utils/nftables/patches/001-drop-useless-file.patch
+rm -f package/network/utils/nftables/patches/002-nftables-add-fullcone-expression-support.patch
 
 #  运行 SONiC 补丁脚本
 curl -sSL -o add_sonic_fullcone.sh \
