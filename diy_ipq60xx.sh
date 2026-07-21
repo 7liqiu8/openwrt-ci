@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ./scripts/feeds update -a
 
 # 删除 mwan3 相关（feeds 目录 + 旧符号链接）
