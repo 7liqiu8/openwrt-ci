@@ -3,7 +3,7 @@ name: IPQ60XX-NOWIFI
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 19 * * *
+    - cron: 0 6 * * *
 
 env:
   REPO_URL: https://github.com/LiBwrt/LibWrt.git
