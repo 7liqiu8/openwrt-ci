@@ -3,7 +3,7 @@ name: IPQ60XX-512m-wifi
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 19 * * *
+    - cron: 0 9 * * *
 
 env:
   REPO_URL: https://github.com/LiBwrt/LibWrt.git
