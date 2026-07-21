@@ -32,6 +32,9 @@ git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git package/luci-a
 # 添加 lucky
 git clone --depth=1 https://github.com/gdy666/luci-app-lucky package/lucky
 
+#  添加pass wall2
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
+
 # 添加 argon 主题
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
