@@ -3,7 +3,7 @@ name: x86_主路由
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 16 * * *
+    - cron: 0 15 * * *
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt.git
