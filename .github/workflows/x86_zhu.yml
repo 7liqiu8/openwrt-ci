@@ -144,7 +144,8 @@ jobs:
         }
     
         # 以下列出所有必须的插件（按需增减）
-        check_pkg "luci-app-mwan3"
+        check_pkg "mwan3" || exit 1
+        check_pkg "luci-app-mwan3" || exit 1
         check_pkg "luci-app-lucky"
         check_pkg "luci-app-sqm"
         check_pkg "luci-app-zerotier"
