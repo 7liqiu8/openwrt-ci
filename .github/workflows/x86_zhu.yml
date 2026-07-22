@@ -125,10 +125,38 @@ jobs:
         chmod +x $GITHUB_WORKSPACE/$DIY_SH
         $GITHUB_WORKSPACE/$DIY_SH
   
-    - name: Download DL Package(下载DL软件包)
+    - name: Generate Defconfig(生成最终编译配置)
       run: |
         cd $OPENWRT_PATH
         make defconfig
+
+    - name: Check Required Packages(检查必要插件是否启用)
+      run: |
+        cd $OPENWRT_PATH
+        echo "🔍 检查关键插件配置状态..."
+        check_pkg() {
+          if grep -q "^CONFIG_PACKAGE_$1=y" .config; then
+            echo "  ✅ $1"
+          else
+            echo "  ❌ 缺少必要插件: $1"
+            exit 1
+          fi
+        }
+    
+        # 以下列出所有必须的插件（按需增减）
+        check_pkg "luci-app-mwan3"
+        check_pkg "luci-app-lucky"
+        check_pkg "luci-app-sqm"
+        check_pkg "luci-app-zerotier"
+        check_pkg "luci-app-frpc"
+        check_pkg "luci-theme-argon"
+        # 注意：包名要和 Makefile 里定义的完全一致
+    
+        echo "✅ 所有关键插件已启用。"
+    
+    - name: Download DL Package(下载DL软件包)
+      run: |
+        cd $OPENWRT_PATH
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
