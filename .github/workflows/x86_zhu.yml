@@ -129,6 +129,7 @@ jobs:
       run: |
         cd $OPENWRT_PATH
         make defconfig
+        grep -E 'CONFIG_PACKAGE_(mwan3|ip-full|libnetfilter-conntrack|kmod-nft-core|nftables-json|rpcd-mod-ucode|jshn|ucode|ucode-mod-rtnl|ucode-mod-uloop|ucode-mod-uci|ucode-mod-ubus|ucode-mod-fs|ucode-mod-socket|ucode-mod-log)' .config
 
     - name: Check Required Packages(检查必要插件是否启用)
       run: |
