@@ -6,8 +6,8 @@ on:
     - cron: 0 5 * * *
 
 env:
-  REPO_URL: https://github.com/immortalwrt/immortalwrt.git
-  REPO_BRANCH: openwrt-24.10
+  REPO_URL: https://github.com/coolsnowwolf/lede.git
+  REPO_BRANCH: master
   CONFIG_FILE: configs/mir3g.config
   DIY_SH: diy_mir3g.sh
   CLASH_KERNEL: amd64
