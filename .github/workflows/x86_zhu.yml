@@ -9,7 +9,7 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt.git
   REPO_BRANCH: openwrt-24.10
   CONFIG_FILE: configs/x86_zhu.config
-  DIY_SH: diy_x86_zhu.sh
+  DIY_SH: configs/x86_zhu.config
   CLASH_KERNEL: amd64
   CACHE_TOOLCHAIN: false
   UPLOAD_BIN_DIR: false
