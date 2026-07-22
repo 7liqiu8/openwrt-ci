@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
 
+echo "===== 开始 ./scripts/feeds update -a ====="
+
 ./scripts/feeds update -a
+
+echo "===== 结束 ./scripts/feeds update -a ====="
+
+echo "===== 开始 检测并删除旧或自带插件 ====="
 
 # 删除 mwan3 相关（feeds 目录 + 旧符号链接）
 find feeds -type d \( -name "mwan3" -o -name "luci-app-mwan3" -o -name "luci-app-syncdial" \) -exec rm -rf {} \; 2>/dev/null
@@ -15,8 +21,21 @@ find package/feeds -type l -name "lucky" -delete 2>/dev/null
 find feeds -type d \( -name "luci-theme-argon" -o -name "luci-app-argon-config" \) -exec rm -rf {} \; 2>/dev/null
 find package/feeds -type l \( -name "luci-theme-argon" -o -name "luci-app-argon-config" \) -delete 2>/dev/null
 
+echo "===== 结束 检测并删除旧或自带插件 ====="
+
+echo "===== 开始 ./scripts/feeds update -i ====="
+
 ./scripts/feeds update -i
+
+echo "===== 结束 ./scripts/feeds update -i ====="
+
+echo "===== 开始 ./scripts/feeds install -a ====="
+
 ./scripts/feeds install -a
+
+echo "===== 结束 ./scripts/feeds install -a ====="
+
+echo "===== 开始 拉取额外插件 ====="
 
 # 添加 mwan3 核心包
 git clone --depth=1 https://github.com/dl12345/mwan3.git package/mwan3 || exit 1
@@ -33,6 +52,10 @@ git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/l
 #  添加pass wall2
 git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2 || exit 1
 
+echo "===== 结束 拉取额外插件 ====="
+
+echo "===== 开始  SONiC 补丁====="
+
 #  删除冲突的 firewall4 旧补丁
 rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
 
@@ -44,6 +67,8 @@ chmod +x add_sonic_fullcone.sh
 
 #  清理 firewall4 的编译残留
 make package/network/config/firewall4/clean V=s
+
+echo "===== 结束 SONiC 补丁 ====="
 
 #  修改 IP 和主机名
 sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
