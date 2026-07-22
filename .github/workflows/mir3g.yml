@@ -8,8 +8,8 @@ on:
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt.git
   REPO_BRANCH: openwrt-24.10
-  CONFIG_FILE: configs/x86_zhu.config
-  DIY_SH: diy_x86_zhu.sh
+  CONFIG_FILE: configs/mir3g.config
+  DIY_SH: diy_mir3g.sh
   CLASH_KERNEL: amd64
   CACHE_TOOLCHAIN: false
   UPLOAD_BIN_DIR: false
