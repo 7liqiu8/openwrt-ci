@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -e
+set -e
 
 ./scripts/feeds update -a
 
@@ -19,19 +19,19 @@ find package/feeds -type l \( -name "luci-theme-argon" -o -name "luci-app-argon-
 ./scripts/feeds install -a
 
 # 添加 mwan3 核心包
-git clone --depth=1 https://github.com/dl12345/mwan3.git package/mwan3
-sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/mwan3/Makefile
-git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git package/luci-app-mwan3
+git clone --depth=1 https://github.com/dl12345/mwan3.git package/mwan3 || exit 1
+sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/mwan3/Makefile || exit 1
+git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git package/luci-app-mwan3 || exit 1
 
 # 添加 lucky
-git clone --depth=1 https://github.com/gdy666/luci-app-lucky package/lucky
+git clone --depth=1 https://github.com/gdy666/luci-app-lucky package/lucky || exit 1
 
 # 添加 argon 主题
-git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
-git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
+git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon || exit 1
+git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config || exit 1
 
 #  添加pass wall2
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2 || exit 1
 
 #  删除冲突的 firewall4 旧补丁
 rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
