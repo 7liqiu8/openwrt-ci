@@ -120,10 +120,9 @@ jobs:
     
     - name: Load Custom Configuration(加载自定义配置和更新、安装feeds)
       run: |
+        cp $GITHUB_WORKSPACE/$CONFIG_FILE $OPENWRT_PATH/.config
         cd $OPENWRT_PATH
-        rm .config
-        cp $CONFIG_FILE $OPENWRT_PATH/.config
-        chmod +x $DIY_SH
+        chmod +x $GITHUB_WORKSPACE/$DIY_SH
         $GITHUB_WORKSPACE/$DIY_SH
   
     - name: Download DL Package(下载DL软件包)
