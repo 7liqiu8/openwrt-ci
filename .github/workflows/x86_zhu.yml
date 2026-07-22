@@ -83,11 +83,13 @@ jobs:
         echo "检查配置文件: $CONFIG_FILE"
         test -f "$CONFIG_FILE" || { echo "❌ 缺少配置文件: $CONFIG_FILE"; exit 1; }
         wc -c "$CONFIG_FILE"
+        cat $CONFIG_FILE
     
         echo "检查自定义脚本: $DIY_SH"
         test -f "$DIY_SH" || { echo "❌ 缺少自定义脚本: $DIY_SH"; exit 1; }
         wc -c "$DIY_SH"
         echo "所有文件就绪。"
+        cat $DIY_SH
 
     - name: Clone Source Code(克隆源代码)
       run: |
