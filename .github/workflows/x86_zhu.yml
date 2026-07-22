@@ -38,6 +38,17 @@ jobs:
         echo "--------------------------硬盘信息--------------------------"
         echo "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
 
+    - name: Check Required Files
+      run: |
+        echo "检查配置文件: $CONFIG_FILE"
+        test -f "$CONFIG_FILE" || { echo "❌ 缺少配置文件: $CONFIG_FILE"; exit 1; }
+        wc -c "$CONFIG_FILE"
+    
+        echo "检查自定义脚本: $DIY_SH"
+        test -f "$DIY_SH" || { echo "❌ 缺少自定义脚本: $DIY_SH"; exit 1; }
+        wc -c "$DIY_SH"
+        echo "所有文件就绪。"
+
     - name: Initialization Environment(初始化环境)
       env:
         DEBIAN_FRONTEND: noninteractive
