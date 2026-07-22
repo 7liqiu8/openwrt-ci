@@ -24,7 +24,7 @@ sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/mwan3/Makefil
 git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git package/luci-app-mwan3 || exit 1
 
 # 添加 lucky
-git clone --depth=1 https://github.com/gdy666/luci-app-lucky package/lucky || exit 1
+git clone --depth=1 git clone  https://github.com/gdy666/luci-app-lucky.git package/lucky || exit 1
 
 # 添加 argon 主题
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon || exit 1
