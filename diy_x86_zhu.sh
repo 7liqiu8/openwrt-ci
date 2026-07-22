@@ -42,15 +42,23 @@ git clone --depth=1 https://github.com/dl12345/mwan3.git package/mwan3 || exit 1
 # sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/mwan3/Makefile || exit 1
 git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git package/luci-app-mwan3 || exit 1
 
+echo "===== 结束 拉取mwan3 ====="
+
 # 添加 lucky
 git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky || exit 1
+
+echo "===== 结束 拉取lucky ====="
 
 # 添加 argon 主题
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon || exit 1
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config || exit 1
 
+echo "===== 结束 拉取argon ====="
+
 #  添加pass wall2
 git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2 || exit 1
+
+echo "===== 结束 拉取passwall2 ====="
 
 echo "===== 结束 拉取额外插件 ====="
 
