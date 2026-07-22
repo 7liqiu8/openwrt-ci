@@ -120,6 +120,7 @@ jobs:
     
     - name: Load Custom Configuration(加载自定义配置和更新、安装feeds)
       run: |
+        rm .config
         cp $GITHUB_WORKSPACE/$CONFIG_FILE $OPENWRT_PATH/.config
         cd $OPENWRT_PATH
         chmod +x $GITHUB_WORKSPACE/$DIY_SH
