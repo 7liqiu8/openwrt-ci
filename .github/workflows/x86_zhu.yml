@@ -127,7 +127,6 @@ jobs:
         chmod +x $GITHUB_WORKSPACE/$DIY_SH
         $GITHUB_WORKSPACE/$DIY_SH
         cat .config
-        cat $DIY_SH
   
     - name: Generate Defconfig(生成最终编译配置)
       run: |
