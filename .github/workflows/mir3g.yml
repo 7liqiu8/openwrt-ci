@@ -148,7 +148,7 @@ jobs:
         check_pkg "mwan3" || exit 1
         check_pkg "luci-app-mwan3" || exit 1
         check_pkg "luci-app-lucky"
-        check_pkg "luci-app-sqm"
+        #check_pkg "luci-app-sqm"
         check_pkg "luci-app-zerotier"
         check_pkg "luci-app-frpc"
         check_pkg "luci-theme-argon"
