@@ -39,7 +39,7 @@ echo "===== 开始 拉取额外插件 ====="
 
 # 添加 mwan3 核心包
 git clone --depth=1 https://github.com/dl12345/mwan3.git package/mwan3 || exit 1
-# sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/mwan3/Makefile || exit 1
+sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/mwan3/Makefile || exit 1
 git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git package/luci-app-mwan3 || exit 1
 
 echo "===== 结束 拉取mwan3 ====="
