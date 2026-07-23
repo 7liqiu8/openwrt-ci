@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-#!/bin/bash
-set -e
 
 echo "===== 开始 ./scripts/feeds update -a ====="
 
