@@ -162,9 +162,9 @@ jobs:
         if gh release view "${TAG}" &>/dev/null; then
             gh release delete "${TAG}" --yes --cleanup-tag
         fi
-
+    
     - name: Publish to release(发布固件)
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
@@ -174,4 +174,3 @@ jobs:
         name: ${{ steps.tag.outputs.release_tag }}
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
-        # 确保每次发布都是全新 release（已在上一步删除了旧版）
