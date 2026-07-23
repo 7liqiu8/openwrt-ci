@@ -45,5 +45,5 @@ make package/network/config/firewall4/clean V=s
 echo "===== 结束 SONiC 补丁 ====="
 
 #  修改 IP 和主机名
-sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/10.11.15.12/g' package/base-files/files/bin/config_generate
 #sed -i "s/ImmortalWrt/OpenWrt/g" package/base-files/files/bin/config_generate
