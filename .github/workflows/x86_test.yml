@@ -32,7 +32,7 @@ jobs:
         remove-haskell: 'true'
         remove-codeql: 'true'
         
-    - name: Check out the project branch(查看项目分支)
+    - name: Check out the project branch(拉取配置文件)
       uses: actions/checkout@main
       with:
           fetch-depth: 0
@@ -42,7 +42,6 @@ jobs:
         echo "Cleaning previous build artifacts and caches..."
         sudo rm -rf $GITHUB_WORKSPACE/openwrt || true
         sudo rm -rf $RUNNER_TEMP/* || true
-        sudo rm -rf $RUNNER_TOOL_CACHE/* || true
         sudo apt-get -qq clean || true
         sudo rm -rf /var/lib/apt/lists/* || true
         rm -rf ~/.cache/* || true
@@ -53,7 +52,6 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         sudo apt update -y
-        sudo apt full-upgrade -y
         sudo apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
         bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib \
         git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev \
@@ -61,10 +59,9 @@ jobs:
         genisoimage msmtp nano ninja-build p7zip p7zip-full patch pkgconf python3 python3-pip libpython3-dev qemu-utils \
         rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
         # 清理不必要的软件包（使用 --ignore-missing 避免因包不存在而报错）
-        sudo -E apt-get -qq purge azure-cli ghc* zulu* llvm* firefox powershell openjdk* dotnet* google* mysql* php* android* speedtest-cli
-        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-        sudo -E apt-get -qq autoremove --purge
-        sudo -E apt-get -qq clean
+        sudo -E apt-get -qq purge azure-cli ghc* zulu* llvm* firefox powershell openjdk* dotnet* google* mysql* php* android* speedtest-cli || true
+        sudo -E apt-get -qq autoremove --purge || true
+        sudo -E apt-get -qq clean || true
         sudo timedatectl set-timezone "$TZ"
              
     - name: Display System Info(显示编译环境信息)
@@ -87,32 +84,35 @@ jobs:
     - name: Download firmware source code(拉取固件源代码)
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        cd openwrt
+        echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
 
     - name: Perform custom operation 1(执行diy1包含更新和安装feeds)
       run: |
-        chmod +x $OPENWRT_NAME/*.sh
-        cd openwrt
+        chmod +x $DIY_P1_SH
+        cd $OPENWRT_PATH
         $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Load config(加载配置文件和执行diy2)
       run: |
-        [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-        chmod +x $OPENWRT_NAME/*.sh && cd openwrt
+        cp $GITHUB_WORKSPACE/$CONFIG_FILE $OPENWRT_PATH/.config
+        chmod +x $GITHUB_WORKSPACE/$DIY_P2_SH
+        cd $OPENWRT_PATH
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
     - name: Download the installation package(下载DL软件包)
       id: package
       run: |
-        cd openwrt
+        cd $OPENWRT_PATH
         make defconfig
-        make download -j$(nproc)
+        make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
              
     - name: Compile the firmware(开始编译固件)
       id: compile
       run: |
-        cd openwrt
+        cd $OPENWRT_PATH
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 || make -j1 V=s
         echo "date1=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
@@ -125,8 +125,9 @@ jobs:
       if: ${{ env.UPLOAD_FIRMWARE == 'true' && steps.compile.outcome == 'success' }}
       run: |
         # 自动识别架构目录，避免硬编码 x86/64
-        cd openwrt/bin/targets/*/*
-        rm -rf packages *rootfs.tar.gz *rootfs.img.gz *combined.img.gz *.bin *.config *.buildinfo *.json sha256sums *.manifest
+        TARGET_DIR=$(ls -d $OPENWRT_PATH/bin/targets/*/* | head -1)
+        cd "$TARGET_DIR"
+        rm -rf packages *.manifest *.json sha256sums *.buildinfo *.config
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
         
@@ -140,7 +141,7 @@ jobs:
 
     - name: Generate release tags(生成发布标签)
       id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.UPLOAD_RELEASE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         # 固定 release tag 为 OPENWRT_NAME1 （例如: 主路由10_1）
         RELEASE_TAG="${{ env.OPENWRT_NAME1 }}"
@@ -161,10 +162,7 @@ jobs:
       run: |
         # 如果 tag 已存在，删除对应的 release 和 tag
         if gh release view "${TAG}" &>/dev/null; then
-          gh release delete "${TAG}" --yes --cleanup-tag
-        elif git rev-parse "${TAG}" &>/dev/null; then
-          # 仅存在 tag 但无 release，也删除 tag
-          git push origin :refs/tags/${TAG}
+            gh release delete "${TAG}" --yes --cleanup-tag
         fi
 
     - name: Publish to release(发布固件)
@@ -174,8 +172,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         files: ${{ env.FIRMWARE }}/*
+        fail_on_unmatched_files: true
         name: ${{ steps.tag.outputs.release_tag }}
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         # 确保每次发布都是全新 release（已在上一步删除了旧版）
-        overwrite: true
