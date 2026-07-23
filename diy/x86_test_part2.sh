@@ -39,8 +39,6 @@ curl -sSL -o add_sonic_fullcone.sh \
 chmod +x add_sonic_fullcone.sh
 ./add_sonic_fullcone.sh
 
-#  清理 firewall4 的编译残留
-make package/network/config/firewall4/clean V=s
 
 echo "===== 结束 SONiC 补丁 ====="
 
