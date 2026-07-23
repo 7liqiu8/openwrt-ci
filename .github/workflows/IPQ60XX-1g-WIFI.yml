@@ -47,7 +47,7 @@ jobs:
         rm -rf ~/.cache/* || true
         echo "Cache cleanup complete."
     
-    - name: Initialize the compilation environment
+    - name: Initialize the compilation environment(初始化编译环境)
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
