@@ -51,6 +51,23 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
+        # ====== 提前清理磁盘空间 ======
+        echo "磁盘使用情况："
+        df -h
+        # 1. 清理 APT 缓存
+        sudo rm -rf /var/lib/apt/lists/*
+        sudo apt clean
+        # 2. 删除不必要的预装大型软件（可能有些目录不存在，加上 || true）
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/hostedtoolcache
+        # 3. 删除 Docker 镜像（如果不需要）
+        sudo docker system prune -af || true
+        # 再次查看剩余空间
+        df -h
+        # ====== 现在再开始正常初始化 ======
         sudo apt update -y
         sudo apt install -y build-essential clang flex bison g++ gawk \
         gcc-multilib g++-multilib gettext git libncurses5-dev libssl-dev \
