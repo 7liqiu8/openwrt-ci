@@ -141,7 +141,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-        # 固定 release tag 为 OPENWRT_NAME1 （例如: 主路由10_1）
+        # 固定 release tag 为 OPENWRT_NAME1 
         RELEASE_TAG="${{ env.OPENWRT_NAME1 }}"
         echo "release_tag=${RELEASE_TAG}" >> $GITHUB_OUTPUT
         
