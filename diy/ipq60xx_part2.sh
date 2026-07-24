@@ -43,6 +43,13 @@ head -n 10 .config
 
 # make oldconfig
 
+echo "=====开始 添加内核缺失项====="
+# 添加缺失项 target/linux/qualcommax/config-6.12
+
+echo "# CONFIG_ALLOC_SKB_PAGE_FRAG_DISABLE is not set" >> target/linux/qualcommax/config-6.12 || exit 1
+
+
+echo "=====结束 添加内核缺失项====="
 #  修改 IP 和主机名
 sed -i 's/192.168.1.1/10.10.87.1/g' package/base-files/files/bin/config_generate
 #sed -i "s/ImmortalWrt/OpenWrt/g" package/base-files/files/bin/config_generate
