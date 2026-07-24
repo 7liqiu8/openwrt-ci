@@ -41,7 +41,7 @@ echo "===== 结束 SONiC 补丁 ====="
 echo "===== 第二次查看.config====="
 head -n 10 .config
 
-make oldconfig
+# make oldconfig
 
 #  修改 IP 和主机名
 sed -i 's/192.168.1.1/10.10.87.1/g' package/base-files/files/bin/config_generate
