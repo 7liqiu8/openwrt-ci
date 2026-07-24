@@ -7,8 +7,9 @@
 - **本人不对任何人因使用本固件所遭受的任何理论或实际的损失承担责任！**
 
 - **本固件禁止用于任何商业用途，请务必严格遵守国家互联网使用相关法律规定！**
-
-验证并开启bbr
+  
+部分插件开启方式
+一、验证并开启bbr
 第一步：确认BBR模块已加载
 
 首先，通过SSH登录到你的OpenWrt设备，运行以下命令检查BBR内核模块是否已加载：
@@ -64,6 +65,8 @@ bash
 sysctl net.ipv4.tcp_congestion_control
 
 如果输出 net.ipv4.tcp_congestion_control = bbr，则表示BBR已成功启用。
+
+二、开启openwrt-sonic-fullcone请查看https://github.com/mufeng05/openwrt-sonic-fullcone
 
 <a href="#readme">
 <img src="https://img.shields.io/badge/-返回顶部-FFFFFF.svg" title="返回顶部" align="right"/>
