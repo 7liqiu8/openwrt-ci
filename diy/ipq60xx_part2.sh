@@ -43,11 +43,6 @@ head -n 10 .config
 
 make oldconfig
 
-# 对内核自动补全默认值
-echo "===== 开始  内核自动补全默认值====="
-yes "" | make kernel_oldconfig
-echo "===== 结束 内核自动补全默认值 ====="
-
 #  修改 IP 和主机名
 sed -i 's/192.168.1.1/10.10.87.1/g' package/base-files/files/bin/config_generate
 #sed -i "s/ImmortalWrt/OpenWrt/g" package/base-files/files/bin/config_generate
