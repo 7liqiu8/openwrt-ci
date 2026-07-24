@@ -22,14 +22,10 @@ echo "===== 结束 拉取passwall2 ====="
 
 echo "===== 结束 拉取额外插件 ====="
 
+echo "===== 第一次查看.config====="
+head -n 10 .config
+
 echo "===== 开始  SONiC 补丁并运行====="
-
-make oldconfig
-
-# 对内核自动补全默认值
-echo "===== 开始  内核自动补全默认值====="
-yes "" | make kernel_oldconfig
-echo "===== 结束 内核自动补全默认值 ====="
 
 #  删除冲突的 firewall4 旧补丁
 rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
@@ -40,8 +36,17 @@ curl -sSL -o add_sonic_fullcone.sh \
 chmod +x add_sonic_fullcone.sh
 ./add_sonic_fullcone.sh
 
-
 echo "===== 结束 SONiC 补丁 ====="
+
+echo "===== 第二次查看.config====="
+head -n 10 .config
+
+make oldconfig
+
+# 对内核自动补全默认值
+echo "===== 开始  内核自动补全默认值====="
+yes "" | make kernel_oldconfig
+echo "===== 结束 内核自动补全默认值 ====="
 
 #  修改 IP 和主机名
 sed -i 's/192.168.1.1/10.10.87.1/g' package/base-files/files/bin/config_generate
