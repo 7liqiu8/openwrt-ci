@@ -24,13 +24,12 @@ echo "===== 结束 拉取额外插件 ====="
 
 echo "===== 开始  SONiC 补丁并运行====="
 
+make oldconfig
 
 # 对内核自动补全默认值
 echo "===== 开始  内核自动补全默认值====="
 yes "" | make kernel_oldconfig
 echo "===== 结束 内核自动补全默认值 ====="
-
-make oldconfig
 
 #  删除冲突的 firewall4 旧补丁
 rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
