@@ -26,7 +26,7 @@ echo "===== 结束 拉取额外插件 ====="
 echo "===== 开始  SONiC 补丁并运行====="
 
 #  删除冲突的 firewall4 旧补丁
-rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
+#rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
 
 #  运行 SONiC 补丁脚本
 curl -sSL -o add_sonic_fullcone.sh \
@@ -38,5 +38,5 @@ chmod +x add_sonic_fullcone.sh
 echo "===== 结束 SONiC 补丁 ====="
 
 #  修改 IP 和主机名
-sed -i 's/192.168.1.1/10.11.15.12/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
 #sed -i "s/ImmortalWrt/OpenWrt/g" package/base-files/files/bin/config_generate
