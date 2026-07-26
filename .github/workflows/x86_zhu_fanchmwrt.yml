@@ -9,8 +9,8 @@ env:
   REPO_URL: https://github.com/fanchmwrt/fanchmwrt.git
   REPO_BRANCH: fanchmwrt-24.10.4
   CONFIG_FILE: configs/x86_zhu.config
-  DIY_P1_SH: diy/x86_zhu_part1.sh
-  DIY_P2_SH: diy/x86_zhu_part2.sh
+  DIY_P1_SH: diy/x86_fanchmwrt_part1.sh
+  DIY_P2_SH: diy/x86_fanchmwrt_part2.sh
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -116,7 +116,6 @@ jobs:
 
     - name: Perform custom operation 1(执行diy1包含更新和安装feeds)
       run: |
-        grep -r "nft_fullcone_validate" . || true
         chmod +x $DIY_P1_SH
         cd $OPENWRT_PATH
         $GITHUB_WORKSPACE/$DIY_P1_SH
