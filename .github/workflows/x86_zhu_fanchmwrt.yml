@@ -7,7 +7,7 @@ on:
 
 env:
   REPO_URL: https://github.com/fanchmwrt/fanchmwrt.git
-  REPO_BRANCH: fanchmwrt-25.12.4
+  REPO_BRANCH: fanchmwrt-24.10.4
   CONFIG_FILE: configs/x86_zhu.config
   DIY_P1_SH: diy/x86_zhu_part1.sh
   DIY_P2_SH: diy/x86_zhu_part2.sh
