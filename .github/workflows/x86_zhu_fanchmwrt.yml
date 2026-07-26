@@ -116,6 +116,7 @@ jobs:
 
     - name: Perform custom operation 1(执行diy1包含更新和安装feeds)
       run: |
+        grep -r "nft_fullcone_validate" target/linux/generic/hack-6.6/
         chmod +x $DIY_P1_SH
         cd $OPENWRT_PATH
         $GITHUB_WORKSPACE/$DIY_P1_SH
