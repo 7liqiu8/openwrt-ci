@@ -112,6 +112,7 @@ jobs:
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
         echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
+        grep -r "nft_fullcone_validate" target/linux/generic/hack-6.6/
 
     - name: Perform custom operation 1(执行diy1包含更新和安装feeds)
       run: |
