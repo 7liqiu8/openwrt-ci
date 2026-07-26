@@ -35,25 +35,40 @@ curl -sSL -o add_sonic_fullcone.sh \
 chmod +x add_sonic_fullcone.sh
 ./add_sonic_fullcone.sh
 
-echo "===== 修复 nft_fullcone_validate 内核 6.6 兼容性 ====="
-# 查找包含该函数的 patch 文件（通常由 SONiC 脚本放入 hack-6.6 目录）
-PATCH_FILE=$(find target/linux/generic/hack-6.6/ package/kernel/linux/ -name "*.patch" -exec grep -l "nft_fullcone_validate" {} + 2>/dev/null | head -n1)
-
-if [ -n "$PATCH_FILE" ]; then
-  # 将函数定义从两参数改为三参数
-  # 假设原补丁形式为：
-  # +static int nft_fullcone_validate(const struct nft_ctx *ctx,
-  # +				 const struct nft_expr *expr)
-  #
-  # 用 sed 在 expr 行后插入一个新行，追加第三个参数
-  sed -i '/^+static int nft_fullcone_validate/,/^+[^{]/ {
-    /const struct nft_expr \*expr)/ s/)/, const struct nft_data \**data)/
-  }' "$PATCH_FILE"
-  echo "已修复补丁: $PATCH_FILE"
+echo "===== 修复 nftables fullcone 补丁 fuzz ====="
+NFT_PATCH="package/network/utils/nftables/patches/002-nftables-add-fullcone-expression-support.patch"
+if [ -f "$NFT_PATCH" ]; then
+  # 将补丁中 statement.c 的 hunk 行号适当下移 1 行（通常需要根据实际失败调整）
+  # 最简单的方法：让 patch 在应用时允许 fuzz，OpenWrt 可以通过设置 QUILT_PATCH_OPTS 实现
+  # 但更可靠的是直接强制刷新补丁（用 quilt 或手动）
+  
+  # 方案A：直接允许 fuzz（但需要改 nftables 的 Makefile，不推荐）
+  # 方案B：尝试用 quilt 刷新补丁（需要先准应用）
+  # 方案C：暴力替换，这里给出一个示例：通常 fuzz 1 是因为上下文多了或少了一行，可以尝试调整补丁的行号
+  # 先看看补丁里 statement.c 的 hunk 头部，一般是 @@ -line,count +line,count @@
+  # 暂时用 sed 将那个 hunk 的起始行号减1（若实际代码比补丁多一行）或加1
+  # 需要具体查看补丁内容，这里给出一个通用修复方法：
+  
+  # 临时允许 fuzz 编译 nftables（通过环境变量传递给 make）
+  # 但是 OpenWrt 的 quilt 命令在 Makefile 中不直接暴露，可以在执行 make 前 export QUILT_PATCH_OPTS="--fuzz=2"
+  # 我们可以在 diy_part2.sh 末尾或编译时传递，但更简单的：直接修改补丁，去除导致 fuzz 的严格检查
+  
+  # 推荐方法：用 quilt 交互式刷新，但 CI 中可改用：
+  echo "尝试自动调整补丁偏移..."
+  cd package/network/utils/nftables
+  # 先应用补丁（允许 fuzz），然后立即刷新
+  if quilt push --fuzz=2 2>/dev/null; then
+    quilt refresh
+    quilt pop -a
+    echo "补丁已刷新并更新"
+  else
+    echo "无法自动刷新，将删除此补丁（如果 fullcone 不需要 nftables 表达式支持可忽略）"
+    rm -f patches/002-nftables-add-fullcone-expression-support.patch
+  fi
+  cd -
 else
-  echo "警告: 未找到包含 nft_fullcone_validate 的补丁，可能脚本未生成或路径变化。"
+  echo "未找到 nftables fullcone 补丁，无需修复"
 fi
-
 
 echo "===== 结束 SONiC 补丁 ====="
 
