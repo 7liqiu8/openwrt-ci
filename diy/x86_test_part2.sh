@@ -23,7 +23,7 @@ echo "===== 结束 拉取passwall2 ====="
 
 echo "===== 结束 拉取额外插件 ====="
 
-echo "===== 开始  SONiC 补丁并运行====="
+echo "===== 开始  删除冲突的 firewall4 旧补丁====="
 
 #  删除冲突的 firewall4 旧补丁
 rm -f package/network/config/firewall4/patches/*fullcone*.patch
@@ -32,6 +32,10 @@ rm -f package/libs/libnftnl/patches/*fullcone*.patch
 rm -f package/network/utils/nftables/patches/*fullcone*.patch
 rm -f package/network/config/firewall/patches/*fullcone*.patch
 rm -f feeds/luci/applications/luci-app-firewall/patches/*fullcone*.patch
+
+echo "===== 结束  删除冲突的 firewall4 旧补丁====="
+
+echo "===== 开始  SONiC 补丁并运行====="
 
 #  运行 SONiC 补丁脚本
 curl -sSL -o add_sonic_fullcone.sh \
