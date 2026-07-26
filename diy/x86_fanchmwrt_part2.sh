@@ -35,6 +35,25 @@ curl -sSL -o add_sonic_fullcone.sh \
 chmod +x add_sonic_fullcone.sh
 ./add_sonic_fullcone.sh
 
+echo "===== 修复 nft_fullcone_validate 内核 6.6 兼容性 ====="
+# 查找包含该函数的 patch 文件（通常由 SONiC 脚本放入 hack-6.6 目录）
+PATCH_FILE=$(find target/linux/generic/hack-6.6/ package/kernel/linux/ -name "*.patch" -exec grep -l "nft_fullcone_validate" {} + 2>/dev/null | head -n1)
+
+if [ -n "$PATCH_FILE" ]; then
+  # 将函数定义从两参数改为三参数
+  # 假设原补丁形式为：
+  # +static int nft_fullcone_validate(const struct nft_ctx *ctx,
+  # +				 const struct nft_expr *expr)
+  #
+  # 用 sed 在 expr 行后插入一个新行，追加第三个参数
+  sed -i '/^+static int nft_fullcone_validate/,/^+[^{]/ {
+    /const struct nft_expr \*expr)/ s/)/, const struct nft_data \**data)/
+  }' "$PATCH_FILE"
+  echo "已修复补丁: $PATCH_FILE"
+else
+  echo "警告: 未找到包含 nft_fullcone_validate 的补丁，可能脚本未生成或路径变化。"
+fi
+
 
 echo "===== 结束 SONiC 补丁 ====="
 
