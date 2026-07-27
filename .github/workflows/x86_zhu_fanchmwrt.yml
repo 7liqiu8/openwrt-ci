@@ -8,7 +8,7 @@ on:
 env:
   REPO_URL: https://github.com/fanchmwrt/fanchmwrt.git
   REPO_BRANCH: fanchmwrt-25.12.4
-  CONFIG_FILE: configs/x86_zhu.config
+  CONFIG_FILE: configs/x86_zhu_fanchmwrt.config
   DIY_P1_SH: diy/x86_fanchmwrt_part1.sh
   DIY_P2_SH: diy/x86_fanchmwrt_part2.sh
   UPLOAD_FIRMWARE: true
