@@ -15,12 +15,6 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky |
 
 echo "===== 结束 拉取lucky ====="
 
-
-#  添加pass wall2
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2 || exit 1
-
-echo "===== 结束 拉取passwall2 ====="
-
 echo "===== 结束 拉取额外插件 ====="
 
 echo "===== 开始  修改软件源====="
