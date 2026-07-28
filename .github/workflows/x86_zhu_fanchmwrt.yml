@@ -131,11 +131,11 @@ jobs:
       id: package
       run: |
         cd $OPENWRT_PATH
-    
-        # 先用 defconfig 补全软件包依赖
         make defconfig
     
-        # 强制写入 BBR 等内核选项（sed 方式，删除旧值再追加）
+        # 删除可能干扰的旧默认拥塞控制选项（Cubic）
+        sed -i '/CONFIG_KERNEL_DEFAULT_CUBIC/d' .config
+        # 强制写入 BBR 相关所有必要内核选项
         sed -i '/CONFIG_KERNEL_NET_SCHED/d' .config
         echo "CONFIG_KERNEL_NET_SCHED=y" >> .config
         sed -i '/CONFIG_KERNEL_IP_ADVANCED_ROUTER/d' .config
@@ -146,10 +146,12 @@ jobs:
         echo "CONFIG_KERNEL_TCP_CONG_BBR=y" >> .config
         sed -i '/CONFIG_KERNEL_DEFAULT_TCP_CONG/d' .config
         echo "CONFIG_KERNEL_DEFAULT_TCP_CONG=\"bbr\"" >> .config
+        sed -i '/CONFIG_KERNEL_DEFAULT_BBR/d' .config
+        echo "CONFIG_KERNEL_DEFAULT_BBR=y" >> .config
         sed -i '/CONFIG_KERNEL_NET_SCH_FQ/d' .config
         echo "CONFIG_KERNEL_NET_SCH_FQ=y" >> .config
     
-        # 检查是否设置成功
+        # 验证
         grep -q "CONFIG_KERNEL_TCP_CONG_BBR=y" .config && echo "✅ BBR is enabled" || echo "⚠️  WARNING: BBR not set!"
     
         make download -j8
