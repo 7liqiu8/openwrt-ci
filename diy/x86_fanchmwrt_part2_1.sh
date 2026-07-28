@@ -7,11 +7,7 @@ echo "===== 开始 拉取额外插件 ====="
 git clone --depth=1 https://github.com/dl12345/mwan3.git package/mwan3 || exit 1
 sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/mwan3/Makefile || exit 1
 git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git package/luci-app-mwan3 || exit 1
-
-cat >> package/luci-app-mwan3/Makefile <<'EOF'
-
-$(eval $(call BuildPackage,luci-app-mwan3))
-EOF
+sed -i '/^include $(TOPDIR)\/rules.mk$/a\PKG_NAME:=luci-app-mwan3' package/luci-app-mwan3/Makefile
 
 echo "===== 结束 拉取mwan3 ====="
 
