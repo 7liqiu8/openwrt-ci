@@ -133,7 +133,7 @@ jobs:
         cd $OPENWRT_PATH
         make defconfig
         grep -i mwan3 .config || true
-        grep -i turboo .config || true
+        grep -i turbo .config || true
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
