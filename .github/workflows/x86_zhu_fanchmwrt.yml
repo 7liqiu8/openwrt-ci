@@ -132,29 +132,8 @@ jobs:
       run: |
         cd $OPENWRT_PATH
         make defconfig
-    
-        # 删除可能干扰的旧默认拥塞控制选项（Cubic）
-        sed -i '/CONFIG_KERNEL_DEFAULT_CUBIC/d' .config
-        # 强制写入 BBR 相关所有必要内核选项
-        sed -i '/CONFIG_KERNEL_NET_SCHED/d' .config
-        echo "CONFIG_KERNEL_NET_SCHED=y" >> .config
-        sed -i '/CONFIG_KERNEL_IP_ADVANCED_ROUTER/d' .config
-        echo "CONFIG_KERNEL_IP_ADVANCED_ROUTER=y" >> .config
-        sed -i '/CONFIG_KERNEL_TCP_CONG_ADVANCED/d' .config
-        echo "CONFIG_KERNEL_TCP_CONG_ADVANCED=y" >> .config
-        sed -i '/CONFIG_KERNEL_TCP_CONG_BBR/d' .config
-        echo "CONFIG_KERNEL_TCP_CONG_BBR=y" >> .config
-        sed -i '/CONFIG_KERNEL_DEFAULT_TCP_CONG/d' .config
-        echo "CONFIG_KERNEL_DEFAULT_TCP_CONG=\"bbr\"" >> .config
-        sed -i '/CONFIG_KERNEL_DEFAULT_BBR/d' .config
-        echo "CONFIG_KERNEL_DEFAULT_BBR=y" >> .config
-        sed -i '/CONFIG_KERNEL_NET_SCH_FQ/d' .config
-        echo "CONFIG_KERNEL_NET_SCH_FQ=y" >> .config
-    
-        # 验证
-        grep -q "CONFIG_KERNEL_TCP_CONG_BBR=y" .config && echo "✅ BBR is enabled" || echo "⚠️  WARNING: BBR not set!"
-    
         make download -j8
+        find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
              
     - name: Compile the firmware(开始编译固件)
