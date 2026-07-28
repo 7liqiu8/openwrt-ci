@@ -132,18 +132,24 @@ jobs:
       run: |
         cd $OPENWRT_PATH
     
-        # 先用 defconfig 补全软件包依赖（例如 kmod 等）
+        # 先用 defconfig 补全软件包依赖
         make defconfig
     
-        # 然后强制保留 BBR 等内核选项（scripts/config 会直接写入，防止被清理）
-        scripts/config -e KERNEL_NET_SCHED
-        scripts/config -e KERNEL_IP_ADVANCED_ROUTER
-        scripts/config -e KERNEL_TCP_CONG_ADVANCED
-        scripts/config -e KERNEL_TCP_CONG_BBR
-        scripts/config --set-val KERNEL_DEFAULT_TCP_CONG bbr
-        scripts/config -e KERNEL_NET_SCH_FQ
+        # 强制写入 BBR 等内核选项（sed 方式，删除旧值再追加）
+        sed -i '/CONFIG_KERNEL_NET_SCHED/d' .config
+        echo "CONFIG_KERNEL_NET_SCHED=y" >> .config
+        sed -i '/CONFIG_KERNEL_IP_ADVANCED_ROUTER/d' .config
+        echo "CONFIG_KERNEL_IP_ADVANCED_ROUTER=y" >> .config
+        sed -i '/CONFIG_KERNEL_TCP_CONG_ADVANCED/d' .config
+        echo "CONFIG_KERNEL_TCP_CONG_ADVANCED=y" >> .config
+        sed -i '/CONFIG_KERNEL_TCP_CONG_BBR/d' .config
+        echo "CONFIG_KERNEL_TCP_CONG_BBR=y" >> .config
+        sed -i '/CONFIG_KERNEL_DEFAULT_TCP_CONG/d' .config
+        echo "CONFIG_KERNEL_DEFAULT_TCP_CONG=\"bbr\"" >> .config
+        sed -i '/CONFIG_KERNEL_NET_SCH_FQ/d' .config
+        echo "CONFIG_KERNEL_NET_SCH_FQ=y" >> .config
     
-        # 检查设置是否成功
+        # 检查是否设置成功
         grep -q "CONFIG_KERNEL_TCP_CONG_BBR=y" .config && echo "✅ BBR is enabled" || echo "⚠️  WARNING: BBR not set!"
     
         make download -j8
