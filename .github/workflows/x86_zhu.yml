@@ -120,8 +120,6 @@ jobs:
       run: |
         cd $OPENWRT_PATH
         make defconfig
-        grep -i mwan3 .config || true
-        grep -E "CONFIG_KERNEL_TCP_CONG_BBR|CONFIG_KERNEL_DEFAULT_TCP_CONG|CONFIG_KERNEL_TCP_CONG_ADVANCED|CONFIG_KERNEL_NET_SCH_FQ" .config || true
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
