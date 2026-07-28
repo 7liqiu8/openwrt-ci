@@ -131,20 +131,7 @@ jobs:
       id: package
       run: |
         cd $OPENWRT_PATH
-        
-        # 直接写入 BBR 及相关内核选项（不再使用 defconfig，避免被清除）
-        cat >> .config <<'KERNEL_OPTIONS'
-        CONFIG_KERNEL_NET_SCHED=y
-        CONFIG_KERNEL_IP_ADVANCED_ROUTER=y
-        CONFIG_KERNEL_TCP_CONG_ADVANCED=y
-        CONFIG_KERNEL_TCP_CONG_BBR=y
-        CONFIG_KERNEL_DEFAULT_TCP_CONG="bbr"
-        CONFIG_KERNEL_NET_SCH_FQ=y
-        KERNEL_OPTIONS
-    
-        # 使用 oldconfig 合并新选项（安全方式，不会删除用户配置）
-        yes "" | make oldconfig 2>/dev/null || true
-    
+        make defconfig
         # 检查 BBR 选项是否保留（便于日志调试）
         grep -q "CONFIG_KERNEL_TCP_CONG_BBR=y" .config && echo "✅ BBR is enabled" || echo "⚠️  WARNING: BBR not set!"
     
