@@ -6,7 +6,14 @@ echo "===== 开始 拉取额外插件 ====="
 # 添加 mwan3 核心包
 git clone --depth=1 https://github.com/dl12345/mwan3.git package/mwan3 || exit 1
 sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/mwan3/Makefile || exit 1
+
+# 克隆 luci-app-mwan3
 git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git package/luci-app-mwan3 || exit 1
+
+# 修复 include 路径（从 ../../luci.mk 改成 feeds 中的正确位置）
+sed -i 's|^include ../../luci.mk|include $(TOPDIR)/feeds/luci/luci.mk|' package/luci-app-mwan3/Makefile
+
+# 补上缺失的 PKG_NAME
 sed -i '/^include $(TOPDIR)\/rules.mk$/a\PKG_NAME:=luci-app-mwan3' package/luci-app-mwan3/Makefile
 
 echo "===== 结束 拉取mwan3 ====="
