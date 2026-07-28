@@ -36,6 +36,29 @@ chmod +x add_sonic_fullcone.sh
 
 echo "===== 结束 SONiC 补丁 ====="
 
+echo "===== 开始 固化内核 BBR 选项 ====="
+# 获取内核版本号，例如 config-5.15 或 config-6.1
+KERNEL_VER=$(ls target/linux/generic/ | grep -E '^config-[0-9.]+$' | sort -V | tail -1 | sed 's/^config-//')
+if [ -z "$KERNEL_VER" ]; then
+    # 若上述查找失败，尝试从 Makefile 提取
+    KERNEL_VER=$(grep LINUX_KERNEL_VERSION include/kernel-version.mk 2>/dev/null | sed 's/.*=\s*//')
+fi
+KERNEL_CONFIG_FILE="target/linux/generic/config-${KERNEL_VER}"
+if [ ! -f "$KERNEL_CONFIG_FILE" ]; then
+    echo "未找到内核配置文件: $KERNEL_CONFIG_FILE，尝试使用默认文件 config-default"
+    KERNEL_CONFIG_FILE="target/linux/generic/config-default"
+fi
+echo "使用内核配置文件: $KERNEL_CONFIG_FILE"
+cat >> "$KERNEL_CONFIG_FILE" <<'EOF'
+CONFIG_NET_SCHED=y
+CONFIG_IP_ADVANCED_ROUTER=y
+CONFIG_TCP_CONG_ADVANCED=y
+CONFIG_TCP_CONG_BBR=y
+CONFIG_DEFAULT_TCP_CONG="bbr"
+CONFIG_NET_SCH_FQ=y
+EOF
+echo "===== 结束 固化内核 BBR 选项 ====="
+
 #  修改 IP 和主机名
 sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
 #sed -i "s/ImmortalWrt/OpenWrt/g" package/base-files/files/bin/config_generate
