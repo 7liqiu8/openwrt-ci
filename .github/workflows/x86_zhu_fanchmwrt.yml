@@ -132,8 +132,21 @@ jobs:
       run: |
         cd $OPENWRT_PATH
         make defconfig
-        grep -i mwan3 .config || true
-        grep -E "CONFIG_KERNEL_TCP_CONG_BBR|CONFIG_KERNEL_DEFAULT_TCP_CONG|CONFIG_KERNEL_TCP_CONG_ADVANCED|CONFIG_KERNEL_NET_SCH_FQ" .config || true
+        
+        # 强制写入并确认 BBR 等内核选项
+        cat >> .config <<EOF
+        CONFIG_KERNEL_NET_SCHED=y
+        CONFIG_KERNEL_IP_ADVANCED_ROUTER=y
+        CONFIG_KERNEL_TCP_CONG_ADVANCED=y
+        CONFIG_KERNEL_TCP_CONG_BBR=y
+        CONFIG_KERNEL_DEFAULT_TCP_CONG="bbr"
+        CONFIG_KERNEL_NET_SCH_FQ=y
+        EOF
+        make olddefconfig
+        
+        # 检查是否设置成功（可选，便于日志调试）
+        grep -E "CONFIG_KERNEL_TCP_CONG_BBR|CONFIG_KERNEL_DEFAULT_TCP_CONG" .config || echo "WARNING: BBR not set!"
+        
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
