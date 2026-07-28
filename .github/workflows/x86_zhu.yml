@@ -120,14 +120,6 @@ jobs:
       run: |
         cd $OPENWRT_PATH
         make defconfig
-        # 强制补回 BBR 内核选项（确保它们一定存在）
-        cat >> .config <<'EOF'
-        CONFIG_KERNEL_TCP_CONG_ADVANCED=y
-        CONFIG_KERNEL_TCP_CONG_BBR=y
-        CONFIG_KERNEL_DEFAULT_TCP_CONG="bbr"
-        CONFIG_KERNEL_NET_SCH_FQ=y
-        CONFIG_PACKAGE_luci-app-mwan3=y
-        EOF
         grep -i mwan3 .config || true
         grep -E "CONFIG_KERNEL_TCP_CONG_BBR|CONFIG_KERNEL_DEFAULT_TCP_CONG|CONFIG_KERNEL_TCP_CONG_ADVANCED|CONFIG_KERNEL_NET_SCH_FQ" .config || true
         make download -j8
