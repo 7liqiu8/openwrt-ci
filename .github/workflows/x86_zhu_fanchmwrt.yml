@@ -131,12 +131,22 @@ jobs:
       id: package
       run: |
         cd $OPENWRT_PATH
+    
+        # 先用 defconfig 补全软件包依赖（例如 kmod 等）
         make defconfig
-        # 检查 BBR 选项是否保留（便于日志调试）
+    
+        # 然后强制保留 BBR 等内核选项（scripts/config 会直接写入，防止被清理）
+        scripts/config -e KERNEL_NET_SCHED
+        scripts/config -e KERNEL_IP_ADVANCED_ROUTER
+        scripts/config -e KERNEL_TCP_CONG_ADVANCED
+        scripts/config -e KERNEL_TCP_CONG_BBR
+        scripts/config --set-val KERNEL_DEFAULT_TCP_CONG bbr
+        scripts/config -e KERNEL_NET_SCH_FQ
+    
+        # 检查设置是否成功
         grep -q "CONFIG_KERNEL_TCP_CONG_BBR=y" .config && echo "✅ BBR is enabled" || echo "⚠️  WARNING: BBR not set!"
     
         make download -j8
-        find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
              
     - name: Compile the firmware(开始编译固件)
