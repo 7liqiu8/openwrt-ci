@@ -23,6 +23,10 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky |
 
 echo "===== 结束 拉取lucky ====="
 
+git clone https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
+
+echo "===== 结束 OpenAppFilter ====="
+
 echo "===== 结束 拉取额外插件 ====="
 
 echo "===== 开始  turbo acc 补丁并运行====="
