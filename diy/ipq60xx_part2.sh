@@ -6,7 +6,15 @@ echo "===== 开始 拉取额外插件 ====="
 # 添加 mwan3 核心包
 git clone --depth=1 https://github.com/dl12345/mwan3.git package/mwan3 || exit 1
 sed -i 's/libnetfilter_conntrack/libnetfilter-conntrack/g' package/mwan3/Makefile || exit 1
+
+# 克隆 luci-app-mwan3
 git clone --depth=1 https://github.com/dl12345/luci-app-mwan3.git package/luci-app-mwan3 || exit 1
+
+# 修复 include 路径（从 ../../luci.mk 改成 feeds 中的正确位置）
+sed -i 's|^include ../../luci.mk|include $(TOPDIR)/feeds/luci/luci.mk|' package/luci-app-mwan3/Makefile
+
+# 补上缺失的 PKG_NAME
+sed -i '/^include $(TOPDIR)\/rules.mk$/a\PKG_NAME:=luci-app-mwan3' package/luci-app-mwan3/Makefile
 
 echo "===== 结束 拉取mwan3 ====="
 
@@ -25,23 +33,18 @@ echo "===== 结束 拉取额外插件 ====="
 echo "===== 第一次查看.config====="
 head -n 10 .config
 
-echo "===== 开始  SONiC 补丁并运行====="
+echo "===== 开始  turbo acc 补丁并运行====="
 
 #  删除冲突的 firewall4 旧补丁
-rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
+# rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
+# rm -rf package/network/utils/fullconenat-nft
 
-#  运行 SONiC 补丁脚本
-curl -sSL -o add_sonic_fullcone.sh \
-  https://raw.githubusercontent.com/mufeng05/openwrt-sonic-fullcone/master/add_sonic_fullcone.sh
-chmod +x add_sonic_fullcone.sh
-./add_sonic_fullcone.sh
+curl -sSL https://raw.githubusercontent.com/mufeng05/turboacc/main/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 
-echo "===== 结束 SONiC 补丁 ====="
+# 删除与内核 6.12.87 不兼容的 shortcut-fe 补丁（nftables 防火墙不需要）
+rm -f target/linux/generic/hack-6.12/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
 
-echo "===== 第二次查看.config====="
-head -n 10 .config
-
-# make oldconfig
+echo "===== 结束 turbo acc 补丁 ====="
 
 echo "=====开始 添加内核缺失项====="
 # 添加缺失项 target/linux/qualcommax/config-6.12
