@@ -34,8 +34,10 @@ echo "===== 开始  turbo acc 补丁并运行====="
 #  删除冲突的 firewall4 旧补丁
 # rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
 # rm -rf package/network/utils/fullconenat-nft
-
 curl -sSL https://raw.githubusercontent.com/mufeng05/turboacc/main/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
+
+# 删除与内核 6.12.87 不兼容的 shortcut-fe 补丁（nftables 防火墙不需要）
+rm -f target/linux/generic/hack-6.12/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
 
 echo "===== 结束 turbo acc 补丁 ====="
 
