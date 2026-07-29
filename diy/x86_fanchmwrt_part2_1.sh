@@ -33,6 +33,9 @@ echo "===== 开始  turbo acc 补丁并运行====="
 
 curl -sSL https://raw.githubusercontent.com/mufeng05/turboacc/main/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 
+# 删除与内核 6.12.87 不兼容的 shortcut-fe 补丁（nftables 防火墙不需要）
+rm -f target/linux/generic/hack-6.12/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
+
 echo "===== 结束 turbo acc 补丁 ====="
 
 
