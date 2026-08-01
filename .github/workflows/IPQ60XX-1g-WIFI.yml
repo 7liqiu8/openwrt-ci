@@ -139,7 +139,7 @@ jobs:
     - name: Fix patch-kernel.sh to allow reject files(允许补丁rej文件不中断编译)
       run: |
         cd $OPENWRT_PATH
-        sed -i '/Aborting.*Reject files found/s/^/#/' scripts/patch-kernel.sh
+        # sed -i '/Aborting.*Reject files found/s/^/#/' scripts/patch-kernel.sh
         echo "已注释 patch-kernel.sh 中的 .rej 检查"
              
     - name: Compile the firmware(开始编译固件)
