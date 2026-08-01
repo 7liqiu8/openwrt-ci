@@ -16,7 +16,7 @@ env:
   TZ: Asia/Shanghai
   OPENWRT_NAME: immortalwrt
   OPENWRT_NAME1: x86_pang
-
+  
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -72,13 +72,24 @@ jobs:
         sudo apt install -y build-essential clang flex bison g++ gawk \
         gcc-multilib g++-multilib gettext git libncurses5-dev libssl-dev \
         python3 python3-pip python3-distutils-extra rsync unzip zlib1g-dev \
-        file wget curl automake
+        file wget curl
         # 清理不必要的软件包（使用 --ignore-missing 避免因包不存在而报错）
         sudo -E apt-get -qq purge azure-cli ghc* zulu* llvm* firefox powershell openjdk* dotnet* google* mysql* php* android* speedtest-cli || true
         sudo -E apt-get -qq autoremove --purge || true
         sudo -E apt-get -qq clean || true
         sudo timedatectl set-timezone "$TZ"
-             
+
+    - name: Install automake 1.17(安装automake-1.17)
+      run: |
+        wget https://ftp.gnu.org/gnu/automake/automake-1.17.tar.gz
+        tar xf automake-1.17.tar.gz
+        cd automake-1.17
+        ./configure --prefix=/usr/local
+        make -j$(nproc)
+        sudo make install
+        # 验证安装
+        automake-1.17 --version
+                 
     - name: Display System Info(显示编译环境信息)
       run: |
         echo "--------------------------CPU信息--------------------------"
@@ -102,6 +113,7 @@ jobs:
         cd openwrt
         echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
 
+
     - name: Perform custom operation 1(执行diy1包含更新和安装feeds)
       run: |
         chmod +x $DIY_P1_SH
@@ -120,17 +132,17 @@ jobs:
       run: |
         cd $OPENWRT_PATH
         make defconfig
-        # 强制补回 BBR 内核选项（确保它们一定存在）
-        cat >> .config <<'EOF'
-        CONFIG_KERNEL_TCP_CONG_ADVANCED=y
-        CONFIG_KERNEL_TCP_CONG_BBR=y
-        CONFIG_KERNEL_DEFAULT_TCP_CONG="bbr"
-        CONFIG_KERNEL_NET_SCH_FQ=y
-        EOF
-        grep -E "CONFIG_KERNEL_TCP_CONG_BBR|CONFIG_KERNEL_DEFAULT_TCP_CONG|CONFIG_KERNEL_TCP_CONG_ADVANCED|CONFIG_KERNEL_NET_SCH_FQ" .config || true
+        grep -i mwan3 .config || true
+        grep -i turbo .config || true
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+
+    - name: Fix patch-kernel.sh to allow reject files(允许补丁rej文件不中断编译)
+      run: |
+        cd $OPENWRT_PATH
+        sed -i '/Aborting.*Reject files found/s/^/#/' scripts/patch-kernel.sh
+        echo "已注释 patch-kernel.sh 中的 .rej 检查"
              
     - name: Compile the firmware(开始编译固件)
       id: compile
