@@ -25,16 +25,18 @@ echo "===== 结束 拉取lucky ====="
 
 echo "===== 结束 拉取额外插件 ====="
 
-echo "===== 开始  turbo acc 补丁并运行====="
+echo "===== 开始  turbo acc 补丁并运行 ====="
 
-#  删除冲突的 firewall4 旧补丁
-# rm -f package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch
-# rm -rf package/network/utils/fullconenat-nft
-
+# 运行 turboacc 集成脚本（它会复制所有补丁，包括我们不需要的 952/953/613）
 curl -sSL https://raw.githubusercontent.com/mufeng05/turboacc/main/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 
-# 删除与内核 6.12.87 不兼容的 shortcut-fe 补丁（nftables 防火墙不需要）
+# 删除所有 shortcut-fe 软件加速内核补丁（nftables 防火墙不需要）
+rm -f target/linux/generic/hack-6.12/952-add-net-conntrack-events-support-multiple-registrant.patch
 rm -f target/linux/generic/hack-6.12/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
+rm -f target/linux/generic/pending-6.12/613-netfilter_optional_tcp_window_check.patch
+
+# 同时删除 shortcut-fe 用户态软件包（避免编译时选择它）
+rm -rf package/turboacc/shortcut-fe
 
 echo "===== 结束 turbo acc 补丁 ====="
 
