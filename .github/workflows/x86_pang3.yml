@@ -1,0 +1,213 @@
+name: x86_旁路由3
+
+on:
+  schedule:
+    - cron: 0 14 * * *
+  workflow_dispatch:
+
+env:
+  REPO_URL: https://github.com/immortalwrt/immortalwrt.git
+  REPO_BRANCH: openwrt-25.12
+  CONFIG_FILE: configs/x86_pang3.config
+  DIY_P1_SH: diy/x86_pang3_part1.sh
+  DIY_P2_SH: diy/x86_pang3_part2.sh
+  UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+  OPENWRT_NAME: immortalwrt
+  OPENWRT_NAME1: x86_pang
+  
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Maximize build space(最大化构建空间)
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 1024
+        swap-size-mb: 4096
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
+        
+    - name: Check out the project branch(拉取配置文件)
+      uses: actions/checkout@main
+      with:
+          fetch-depth: 0
+          
+    - name: Clean build caches(清理构建缓存)
+      run: |
+        echo "Cleaning previous build artifacts and caches..."
+        sudo rm -rf $GITHUB_WORKSPACE/openwrt || true
+        sudo rm -rf $RUNNER_TEMP/* || true
+        sudo apt-get -qq clean || true
+        sudo rm -rf /var/lib/apt/lists/* || true
+        rm -rf ~/.cache/* || true
+        echo "Cache cleanup complete."
+    
+    - name: Initialize the compilation environment(初始化编译环境)
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        # ====== 提前清理磁盘空间 ======
+        echo "磁盘使用情况："
+        df -h
+        # 1. 清理 APT 缓存
+        sudo rm -rf /var/lib/apt/lists/*
+        sudo apt clean
+        # 2. 删除不必要的预装大型软件（可能有些目录不存在，加上 || true）
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/hostedtoolcache
+        # 3. 删除 Docker 镜像（如果不需要）
+        sudo docker system prune -af || true
+        # 再次查看剩余空间
+        df -h
+        # ====== 现在再开始正常初始化 ======
+        sudo apt update -y
+        sudo apt install -y build-essential clang flex bison g++ gawk \
+        gcc-multilib g++-multilib gettext git libncurses5-dev libssl-dev \
+        python3 python3-pip python3-distutils-extra rsync unzip zlib1g-dev \
+        file wget curl
+        # 清理不必要的软件包（使用 --ignore-missing 避免因包不存在而报错）
+        sudo -E apt-get -qq purge azure-cli ghc* zulu* llvm* firefox powershell openjdk* dotnet* google* mysql* php* android* speedtest-cli || true
+        sudo -E apt-get -qq autoremove --purge || true
+        sudo -E apt-get -qq clean || true
+        sudo timedatectl set-timezone "$TZ"
+
+    - name: Install automake 1.17(安装automake-1.17)
+      run: |
+        wget https://ftp.gnu.org/gnu/automake/automake-1.17.tar.gz
+        tar xf automake-1.17.tar.gz
+        cd automake-1.17
+        ./configure --prefix=/usr/local
+        make -j$(nproc)
+        sudo make install
+        # 验证安装
+        automake-1.17 --version
+                 
+    - name: Display System Info(显示编译环境信息)
+      run: |
+        echo "--------------------------CPU信息--------------------------"
+        echo "CPU物理数量：$(grep 'physical id' /proc/cpuinfo | sort -u | wc -l)"
+        echo "CPU核心信息："
+        grep 'model name' /proc/cpuinfo | cut -d: -f2 | sort | uniq -c
+        echo ""
+        echo "--------------------------内存信息--------------------------"
+        free -h
+        echo ""
+        echo "--------------------------磁盘信息--------------------------"
+        echo "挂载情况："
+        df -hT
+        echo ""
+        echo "块设备："
+        lsblk -o NAME,SIZE,TYPE,MOUNTPOINT 2>/dev/null || ls /dev/sd* 2>/dev/null || echo "无法列出块设备"
+        
+    - name: Download firmware source code(拉取固件源代码)
+      run: |
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        cd openwrt
+        echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
+
+
+    - name: Perform custom operation 1(执行diy1包含更新和安装feeds)
+      run: |
+        chmod +x $DIY_P1_SH
+        cd $OPENWRT_PATH
+        $GITHUB_WORKSPACE/$DIY_P1_SH
+
+    - name: Load config(加载配置文件和执行diy2)
+      run: |
+        cp $GITHUB_WORKSPACE/$CONFIG_FILE $OPENWRT_PATH/.config
+        chmod +x $GITHUB_WORKSPACE/$DIY_P2_SH
+        cd $OPENWRT_PATH
+        $GITHUB_WORKSPACE/$DIY_P2_SH
+
+    - name: Download the installation package(下载DL软件包)
+      id: package
+      run: |
+        cd $OPENWRT_PATH
+        make defconfig
+        grep -i mwan3 .config || true
+        grep -i turbo .config || true
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+
+    - name: Fix patch-kernel.sh to allow reject files(允许补丁rej文件不中断编译)
+      run: |
+        cd $OPENWRT_PATH
+        # sed -i '/Aborting.*Reject files found/s/^/#/' scripts/patch-kernel.sh
+        echo "已注释 patch-kernel.sh 中的 .rej 检查"
+             
+    - name: Compile the firmware(开始编译固件)
+      id: compile
+      run: |
+        cd $OPENWRT_PATH
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j1 || make -j1 V=s
+        echo "date1=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+        echo "date2=$(date "+%Y年%m月%d日%H:%M")" >> $GITHUB_ENV
+        echo "date3=$(date +'%H%M')" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: Organize and Rename Files(整理和重命名文件)
+      id: organize
+      if: ${{ env.UPLOAD_FIRMWARE == 'true' && steps.compile.outcome == 'success' }}
+      run: |
+        # 自动识别架构目录，避免硬编码 x86/64
+        TARGET_DIR=$(ls -d $OPENWRT_PATH/bin/targets/*/* | head -1)
+        cd "$TARGET_DIR"
+        rm -rf packages *.manifest *.json sha256sums *.buildinfo *.config
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
+        
+    - name: Upload the firmware to github(将固件上传到github)
+      uses: actions/upload-artifact@main
+      if: steps.organize.outputs.status == 'success' && !cancelled()
+      with:
+        # Artifact 名称也加入时间戳，防止下载错版本
+        name: ${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_NAME1 }}_${{ env.date3 }}
+        path: ${{ env.FIRMWARE }}
+
+    - name: Generate release tags(生成发布标签)
+      id: tag
+      if: env.UPLOAD_RELEASE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
+      run: |
+        # 固定 release tag 为 OPENWRT_NAME1 
+        RELEASE_TAG="${{ env.OPENWRT_NAME1 }}"
+        echo "release_tag=${RELEASE_TAG}" >> $GITHUB_OUTPUT
+        
+        touch release.txt
+        echo "📥 固件下载" >> release.txt
+        echo "- 编译配置: ${RELEASE_TAG}" >> release.txt
+        echo "- 完整路径: ${{ env.CONFIG_FILE }}" >> release.txt
+        echo "- 编译完成时间: ${{ env.date2 }}" >> release.txt
+        echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: Delete existing release and tag (if any)(删除现有的发布版本和标签（如果存在）)
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        TAG: ${{ steps.tag.outputs.release_tag }}
+      run: |
+        # 如果 tag 已存在，删除对应的 release 和 tag
+        if gh release view "${TAG}" &>/dev/null; then
+            gh release delete "${TAG}" --yes --cleanup-tag
+        fi
+    
+    - name: Publish to release(发布固件)
+      uses: softprops/action-gh-release@v2
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: ${{ env.FIRMWARE }}/*
+        fail_on_unmatched_files: true
+        name: ${{ steps.tag.outputs.release_tag }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
