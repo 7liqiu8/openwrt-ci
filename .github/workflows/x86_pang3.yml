@@ -15,7 +15,7 @@ env:
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
   OPENWRT_NAME: immortalwrt
-  OPENWRT_NAME1: x86_pang
+  OPENWRT_NAME1: x86_pang3
   
 jobs:
   build:
