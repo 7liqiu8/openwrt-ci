@@ -106,7 +106,18 @@ jobs:
         echo ""
         echo "块设备："
         lsblk -o NAME,SIZE,TYPE,MOUNTPOINT 2>/dev/null || ls /dev/sd* 2>/dev/null || echo "无法列出块设备"
-        
+
+    - name: Install automake 1.17(安装automake-1.17)
+      run: |
+        wget https://ftp.gnu.org/gnu/automake/automake-1.17.tar.gz
+        tar xf automake-1.17.tar.gz
+        cd automake-1.17
+        ./configure --prefix=/usr/local
+        make -j$(nproc)
+        sudo make install
+        # 验证安装
+        automake-1.17 --version
+                        
     - name: Download firmware source code(拉取固件源代码)
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
