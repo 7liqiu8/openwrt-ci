@@ -7,7 +7,7 @@ on:
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt.git
-  REPO_BRANCH: openwrt-25.12
+  REPO_BRANCH: openwrt-24.10
   CONFIG_FILE: configs/x86_pang.config
   DIY_P1_SH: diy/x86_pang_part1.sh
   DIY_P2_SH: diy/x86_pang_part2.sh
