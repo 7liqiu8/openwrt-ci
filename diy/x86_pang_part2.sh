@@ -24,9 +24,13 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky |
 echo "===== 结束 拉取lucky ====="
 
 #  添加pass wall2
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2 || exit 1
+# git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2 || exit 1
 
-echo "===== 结束 拉取passwall2 ====="
+# echo "===== 结束 拉取passwall2 ====="
+
+git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/luci-app-easytier || exit 1
+
+echo "===== 结束 拉取easytier ====="
 
 echo "===== 结束 拉取额外插件 ====="
 
