@@ -41,7 +41,7 @@ curl -sSL https://raw.githubusercontent.com/mufeng05/turboacc/main/add_turboacc.
 # 删除所有 shortcut-fe 软件加速内核补丁（nftables 防火墙不需要）
 rm -f target/linux/generic/hack-6.12/952-add-net-conntrack-events-support-multiple-registrant.patch
 rm -f target/linux/generic/hack-6.12/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
-rm -f target/linux/generic/pending-6.12/613-netfilter_optional_tcp_window_check.patch
+# rm -f target/linux/generic/pending-6.12/613-netfilter_optional_tcp_window_check.patch
 
 # 同时删除 shortcut-fe 用户态软件包（避免编译时选择它）
 rm -rf package/turboacc/shortcut-fe
