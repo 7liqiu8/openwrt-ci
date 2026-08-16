@@ -20,6 +20,10 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky |
 
 echo "===== 结束 拉取lucky ====="
 
+git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/luci-app-easytier || exit 1
+
+echo "===== 结束 拉取easytier ====="
+
 echo "===== 结束 拉取额外插件 ====="
 
 echo "===== 开始  SONiC 补丁并运行====="
