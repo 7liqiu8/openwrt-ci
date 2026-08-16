@@ -10,9 +10,9 @@ echo "===== 结束 ./scripts/feeds update -a ====="
 echo "===== 开始 检测并删除旧或自带插件 ====="
 
 # 删除 feeds 中所有 zerotier 相关目录（本体 + Luci + 依赖）
-find feeds -type d \( -name "zerotier" -o -name "luci-app-zerotier" \) -exec rm -rf {} \; 2>/dev/null || true
+# find feeds -type d \( -name "zerotier" -o -name "luci-app-zerotier" \) -exec rm -rf {} \; 2>/dev/null || true
 # 如果之前编译过，也删除 package/feeds 里的符号链接
-find package/feeds -type l \( -name "zerotier" -o -name "luci-app-zerotier" \) -delete 2>/dev/null || true
+# find package/feeds -type l \( -name "zerotier" -o -name "luci-app-zerotier" \) -delete 2>/dev/null || true
 
 # 删除 mwan3 相关
 find feeds -type d \( -name "mwan3" -o -name "luci-app-mwan3" -o -name "luci-app-syncdial" \) -exec rm -rf {} \; 2>/dev/null || true
