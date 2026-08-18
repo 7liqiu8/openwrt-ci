@@ -9,9 +9,9 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky |
 
 echo "===== 结束 拉取lucky ====="
 
-git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/luci-app-easytier || exit 1
+# git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/luci-app-easytier || exit 1
 
-echo "===== 结束 拉取easytier ====="
+# echo "===== 结束 拉取easytier ====="
 
 # 运行 turboacc
 curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
