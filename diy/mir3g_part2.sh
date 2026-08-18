@@ -14,7 +14,7 @@ echo "===== 结束 拉取lucky ====="
 # echo "===== 结束 拉取easytier ====="
 
 # 运行 turboacc
-curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
+# curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 
 #  修改 IP 和主机名
 sed -i 's/192.168.1.1/10.10.60.1/g' package/base-files/files/bin/config_generate
