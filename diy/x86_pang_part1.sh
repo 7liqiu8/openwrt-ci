@@ -39,3 +39,5 @@ echo "===== 开始 ./scripts/feeds install -a ====="
 ./scripts/feeds install -a
 
 echo "===== 结束 ./scripts/feeds install -a ====="
+
+sed -i 's/download-ci-llvm = true/download-ci-llvm = false/g' feeds/packages/lang/rust/Makefile
