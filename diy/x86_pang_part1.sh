@@ -23,16 +23,16 @@ find feeds -type d -name "lucky" -exec rm -rf {} \; 2>/dev/null || true
 find package/feeds -type l -name "lucky" -delete 2>/dev/null || true
 
 # 删除 passwall 相关
-# find feeds -type d \( -name "passwall" -o -name "luci-app-passwall" \) -exec rm -rf {} \; 2>/dev/null || true
-# find package/feeds -type l \( -name "passwall" -o -name "luci-app-passwall" \) -delete 2>/dev/null || true
+find feeds -type d \( -name "passwall" -o -name "luci-app-passwall" \) -exec rm -rf {} \; 2>/dev/null || true
+find package/feeds -type l \( -name "passwall" -o -name "luci-app-passwall" \) -delete 2>/dev/null || true
 
 # 删除 passwall2 相关
-# find feeds -type d \( -name "passwall2" -o -name "luci-app-passwall2" \) -exec rm -rf {} \; 2>/dev/null || true
-# find package/feeds -type l \( -name "passwall2" -o -name "luci-app-passwall2" \) -delete 2>/dev/null || true
+find feeds -type d \( -name "passwall2" -o -name "luci-app-passwall2" \) -exec rm -rf {} \; 2>/dev/null || true
+find package/feeds -type l \( -name "passwall2" -o -name "luci-app-passwall2" \) -delete 2>/dev/null || true
 
 # 删除 openclash 相关
-# find feeds -type d \( -name "openclash" -o -name "luci-app-openclash" \) -exec rm -rf {} \; 2>/dev/null || true
-# find package/feeds -type l \( -name "openclash" -o -name "luci-app-openclash" \) -delete 2>/dev/null || true
+find feeds -type d \( -name "openclash" -o -name "luci-app-openclash" \) -exec rm -rf {} \; 2>/dev/null || true
+find package/feeds -type l \( -name "openclash" -o -name "luci-app-openclash" \) -delete 2>/dev/null || true
 
 # 删除 turboacc 相关包（避免与自定义 package/turboacc 冲突）
 find feeds -type d \( -name "luci-app-turboacc" -o -name "fullconenat" -o -name "fullconenat-nft" -o -name "shortcut-fe" -o -name "turboacc" \) -exec rm -rf {} \; 2>/dev/null || true
