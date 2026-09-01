@@ -25,6 +25,7 @@ find package/feeds -type l -name "lucky" -delete 2>/dev/null || true
 # 删除 passwall 相关
 find feeds -type d \( -name "passwall" -o -name "luci-app-passwall" \) -exec rm -rf {} \; 2>/dev/null || true
 find package/feeds -type l \( -name "passwall" -o -name "luci-app-passwall" \) -delete 2>/dev/null || true
+rm -rf feeds/packages/net/{chinadns-ng,dns2socks,tcping} || true
 
 # 删除 passwall2 相关
 find feeds -type d \( -name "passwall2" -o -name "luci-app-passwall2" \) -exec rm -rf {} \; 2>/dev/null || true
