@@ -24,17 +24,17 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky |
 echo "===== 结束 拉取lucky ====="
 
 #  添加pass wall
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall package/luci-app-passwall || exit 1
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall.git package/luci-app-passwall || exit 1
 
 echo "===== 结束 拉取passwall ====="
 
 #  添加pass wall2
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2 || exit 1
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git package/luci-app-passwall2 || exit 1
 
 echo "===== 结束 拉取passwall2 ====="
 
 #  添加openclash
-git clone --depth=1 https://github.com/vernesong/OpenClash package/luci-app-openclash || exit 1
+git clone --depth=1 https://github.com/vernesong/OpenClash.git package/luci-app-openclash || exit 1
 
 echo "===== 结束 拉取openclash ====="
 
