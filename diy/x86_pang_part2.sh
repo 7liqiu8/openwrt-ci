@@ -28,6 +28,11 @@ git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 packag
 
 echo "===== 结束 拉取passwall2 ====="
 
+#  添加openclash
+git clone --depth=1 https://github.com/vernesong/OpenClash package/luci-app-openclash || exit 1
+
+echo "===== 结束 拉取openclash ====="
+
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/luci-app-easytier || exit 1
 
 echo "===== 结束 拉取easytier ====="
