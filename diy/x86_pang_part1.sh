@@ -41,6 +41,10 @@ find package/feeds -type l \( -name "luci-app-turboacc" -o -name "fullconenat" -
 
 echo "===== 结束 检测并删除旧或自带插件 ====="
 
+# 追加 passwall
+echo "src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main" >> feeds.conf.default
+echo "src-git passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall.git;main" >> feeds.conf.default
+
 echo "===== 开始 ./scripts/feeds update -i ====="
 
 ./scripts/feeds update -i
