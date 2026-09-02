@@ -36,15 +36,17 @@ echo "===== 结束 拉取额外插件 ====="
 echo "===== 开始  turbo acc 补丁并运行 ====="
 
 # 运行 turboacc 集成脚本（它会复制所有补丁，包括我们不需要的 952/953/613）
-curl -sSL https://raw.githubusercontent.com/mufeng05/turboacc/main/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
+# curl -sSL https://raw.githubusercontent.com/mufeng05/turboacc/main/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 
 # 删除所有 shortcut-fe 软件加速内核补丁（nftables 防火墙不需要）
-rm -f target/linux/generic/hack-6.12/952-add-net-conntrack-events-support-multiple-registrant.patch
-rm -f target/linux/generic/hack-6.12/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
+# rm -f target/linux/generic/hack-6.12/952-add-net-conntrack-events-support-multiple-registrant.patch
+# rm -f target/linux/generic/hack-6.12/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
 # rm -f target/linux/generic/pending-6.12/613-netfilter_optional_tcp_window_check.patch
 
 # 同时删除 shortcut-fe 用户态软件包（避免编译时选择它）
-rm -rf package/turboacc/shortcut-fe
+# rm -rf package/turboacc/shortcut-fe
+
+curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
 
 echo "===== 结束 turbo acc 补丁 ====="
 
