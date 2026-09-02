@@ -46,9 +46,9 @@ echo "===== 开始  turbo acc 补丁并运行 ====="
 # 同时删除 shortcut-fe 用户态软件包（避免编译时选择它）
 # rm -rf package/turboacc/shortcut-fe
 
-curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
+# curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
 
-echo "===== 结束 turbo acc 补丁 ====="
+# echo "===== 结束 turbo acc 补丁 ====="
 
 
 #  修改 IP 和主机名
