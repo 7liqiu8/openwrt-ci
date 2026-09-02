@@ -44,8 +44,7 @@ echo "===== 结束 拉取easytier ====="
 
 echo "===== 结束 拉取额外插件 ====="
 
-echo "===== 开始  turbo acc 补丁并运行====="
-
+# echo "===== 开始  turbo acc 补丁并运行====="
 
 # 运行 turboacc 集成脚本（它会复制所有补丁，包括我们不需要的 952/953/613）
 # curl -sSL https://raw.githubusercontent.com/mufeng05/turboacc/main/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
