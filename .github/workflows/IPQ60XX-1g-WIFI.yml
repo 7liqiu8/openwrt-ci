@@ -1,8 +1,8 @@
 name: ipq60xx-1g-wifi
 
 on:
-  schedule:
-    - cron: 0 8 * * *
+  #schedule:
+    #- cron: 0 8 * * *
   workflow_dispatch:
 
 env:
